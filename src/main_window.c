@@ -1,24 +1,25 @@
 #include <pebble.h>
 
-// BEGIN AUTO-GENERATED UI CODE; DO NOT MODIFY
-static Window *s_window;
-static GBitmap *s_res_background_image;
-static BitmapLayer *s_bitmaplayer_1;
-static Layer *s_layer_1, *background_layer;
+Window *s_window;
+GBitmap *s_res_background_image;
+BitmapLayer *s_bitmaplayer_1;
+Layer *s_layer_1, *background_layer;
 
-static Layer *level1layer, *level2layer, *level3layer, *level4layer, *level5layer, *level6layer;
+Layer *level1layer, *level2layer, *level3layer, *level4layer, *level5layer, *level6layer;
 
-static GPath *level1, *level2, *level3, *level4, *level5, *level6;
+GPath *level1, *level2, *level3, *level4, *level5, *level6;
 
-static AppTimer *redraw_timer;
+GFont *metalGear9;
 
-static TextLayer *time_layer, *bluetooth_layer, *charge_layer;
+AppTimer *redraw_timer;
+
+TextLayer *time_layer, *bluetooth_layer, *charge_layer;
 
 bool connected;
 
 int seconds;
 
-static GPathInfo LEVEL_1_POINTS = {
+GPathInfo LEVEL_1_POINTS = {
   4,
   (GPoint[]) {
     {15,130},
@@ -28,7 +29,7 @@ static GPathInfo LEVEL_1_POINTS = {
   }
 };
 
-static GPathInfo LEVEL_2_POINTS = {
+GPathInfo LEVEL_2_POINTS = {
   4,
   (GPoint[]) {
     {15,110},
@@ -38,7 +39,7 @@ static GPathInfo LEVEL_2_POINTS = {
   }
 };
 
-static GPathInfo LEVEL_3_POINTS = {
+GPathInfo LEVEL_3_POINTS = {
   5,
   (GPoint[]) {
     {15,90},
@@ -49,7 +50,7 @@ static GPathInfo LEVEL_3_POINTS = {
   }
 };
 
-static GPathInfo LEVEL_4_POINTS = {
+GPathInfo LEVEL_4_POINTS = {
   5,
   (GPoint[]) {
     {15,70},
@@ -60,7 +61,7 @@ static GPathInfo LEVEL_4_POINTS = {
   }
 };
 
-static GPathInfo LEVEL_5_POINTS = {
+GPathInfo LEVEL_5_POINTS = {
   6,
   (GPoint[]) {
     {15,50},
@@ -72,7 +73,7 @@ static GPathInfo LEVEL_5_POINTS = {
   }
 };
 
-static GPathInfo LEVEL_6_POINTS = {
+GPathInfo LEVEL_6_POINTS = {
   4,
   (GPoint[]) {
     {15,29},
@@ -82,7 +83,7 @@ static GPathInfo LEVEL_6_POINTS = {
   }
 };
 
-static void background_update(Layer *layer, GContext *ctx) {
+void background_update(Layer *layer, GContext *ctx) {
   #ifdef PBL_COLOR
     graphics_context_set_fill_color(ctx, GColorMidnightGreen);
     graphics_fill_rect(ctx, GRect(5,130,5,15), 0, GCornersAll);    
@@ -114,7 +115,7 @@ static void background_update(Layer *layer, GContext *ctx) {
   #endif
 }
 
-static void levels_update(Layer *layer, GContext *ctx) {
+void levels_update(Layer *layer, GContext *ctx) {
   #ifdef PBL_COLOR
     graphics_context_set_fill_color(ctx, GColorElectricBlue);
   #else
@@ -154,10 +155,10 @@ static void levels_update(Layer *layer, GContext *ctx) {
       graphics_context_set_text_color(ctx, GColorBlack);
     #endif
   }
-   graphics_draw_text(ctx, "MaX",  fonts_load_custom_font(resource_get_handle(RESOURCE_ID_METAL_GEAR_9)), GRect(114,43,30,30), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
+   graphics_draw_text(ctx, "MaX",  metalGear9, GRect(114,43,30,30), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
 }
 
-static void set_time(struct tm *t) {
+void set_time(struct tm *t) {
  static char time_text[] = "00.00";
   seconds = t->tm_sec;
   if(seconds == 10 || seconds == 20 || seconds == 30 || seconds == 40 || seconds == 50 || seconds == 60) {
@@ -171,11 +172,11 @@ static void set_time(struct tm *t) {
   text_layer_set_text(time_layer, time_text);
 }
 
-static void tick_handler(struct tm *t, TimeUnits units_changed) {
+void tick_handler(struct tm *t, TimeUnits units_changed) {
   set_time(t);
 }
 
-static void handle_battery(BatteryChargeState charge_state) {
+void handle_battery(BatteryChargeState charge_state) {
   if(charge_state.charge_percent <= 20) {
     layer_set_hidden((Layer*)charge_layer, false);
   } else {
@@ -183,7 +184,7 @@ static void handle_battery(BatteryChargeState charge_state) {
   }
 }
 
-static void handle_bluetooth(bool connection) {
+void handle_bluetooth(bool connection) {
   if(connection) {
     #ifdef PBL_COLOR
       text_layer_set_text_color(bluetooth_layer, GColorElectricBlue);
@@ -199,12 +200,13 @@ static void handle_bluetooth(bool connection) {
   }
 }
 
-static void initialise_ui(void) {
+void initialise_ui() {
   s_window = window_create();
   window_set_background_color(s_window, GColorBlack);
   window_set_fullscreen(s_window, true);
   
   s_res_background_image = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND_IMAGE);
+  metalGear9 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_METAL_GEAR_9));
   // s_bitmaplayer_1
   s_bitmaplayer_1 = bitmap_layer_create(GRect(0, 0, 144, 168));
   bitmap_layer_set_bitmap(s_bitmaplayer_1, s_res_background_image);
@@ -268,7 +270,7 @@ static void initialise_ui(void) {
   handle_bluetooth(bluetooth_connection_service_peek());
 }
 
-static void destroy_ui(void) {
+void destroy_ui() {
   window_destroy(s_window);
   bitmap_layer_destroy(s_bitmaplayer_1);
   layer_destroy(s_layer_1);
@@ -277,13 +279,13 @@ static void destroy_ui(void) {
 }
 // END AUTO-GENERATED UI CODE
 
-static void handle_window_unload(Window* window) {
+void handle_window_unload(Window* window) {
   battery_state_service_unsubscribe();
   tick_timer_service_unsubscribe();
   destroy_ui();
 }
 
-void show_main_window(void) {
+void show_main_window() {
   initialise_ui();
   window_set_window_handlers(s_window, (WindowHandlers) {
     .unload = handle_window_unload,
@@ -298,11 +300,11 @@ void show_main_window(void) {
   set_time(t);
 }
 
-void hide_main_window(void) {
+void hide_main_window() {
   window_stack_remove(s_window, true);
 }
 
-int main(void) {
+int main() {
   show_main_window();
   app_event_loop();
   hide_main_window();
