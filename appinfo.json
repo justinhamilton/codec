@@ -9,6 +9,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/pebble-codec.png",
+                "name": "BACKGROUND_IMAGE",
+                "type": "png"
+            },
+            {
                 "file": "fonts/MGS2 (4).ttf",
                 "name": "METAL_GEAR_9",
                 "type": "font"
@@ -27,11 +32,6 @@
                 "file": "fonts/MGS2 (4).ttf",
                 "name": "METAL_GEAR_17",
                 "type": "font"
-            },
-            {
-                "file": "images/pebble-codec.png",
-                "name": "BACKGROUND_IMAGE",
-                "type": "png"
             }
         ]
     },
